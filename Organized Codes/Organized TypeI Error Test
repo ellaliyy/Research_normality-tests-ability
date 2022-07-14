@@ -1,5 +1,10 @@
 #Organized TypeI Error Test
 
+library("nortest")
+library("dgof")
+library("dplyr")
+library(moments)
+
 #Same Mean
 alpha <- 0.05
 N <- 1000
