@@ -118,36 +118,3 @@ for(i in 1:length(nvec)){
 powervec10
 barplot(powervec10, main="TypeI Error Rate---df=10")
 
-############################################
-############################################
-alpha <- 0.05
-N <- 1000
-rejectH0 <- pval <-  numeric(N)
-
-nvec <- c(5,10,15,20,25)
-dfvec <- c(3,5,8,10,15)
-powervec <- numeric(length(nvec)*length(dfvec))
-powermatrix <- matrix(powervec,
-                      nrow=length(nvec),ncol=length(dfvec),byrow=TRUE)
-
-#matrix instead[i,k]
-m <- 1
-
-for(i in 1:length(nvec)){
-  n <- nvec[i]
-  for(k in 1:length(dfvec)){
-    df <- dfvec[k]
-    for(j in 1:N){
-      x <- rchisq(n,df)
-      y <- rchisq(n,df)
-      out <- t.test(x,y)
-      pval <- out$p.value
-      if(pval < alpha){
-        rejectH0[j] <- 1
-      }
-    }
-    powermatrix[i,k] <- mean(rejectH0)
-  }
-}
-powermatrix
-barplot(powermatrix, main="TypeI Error Rate")
