@@ -1,0 +1,70 @@
+###Plots for downstream effects
+
+library("nortest")
+library("dgof")
+library("dplyr")
+library(moments)
+
+#Same Mean
+alpha <- 0.05
+N <- 1000
+
+
+nvec <- c(5,10,15,20,25)
+dfvec <- c(3,5,8,10,15)
+powervec <- numeric(length(nvec)*length(dfvec))
+powermatrixs <- matrix(powervec,
+                       nrow=length(nvec),
+                       ncol=length(dfvec),byrow=TRUE)
+
+for(i in 1:length(nvec)){
+  n <- nvec[i]
+  for(k in 1:length(dfvec)){
+    df <- dfvec[k]
+    rejectH0 <- numeric(N)
+    for(j in 1:N){
+      x <- generate_data(n,"Chi-square",df)
+      y <- generate_data(n,"Chi-square",df)
+      out <- t.test(x,y)
+      pval <- out$p.value
+      if(pval < alpha){
+        rejectH0[j] <- 1
+      }
+    }
+    powermatrixs[i,k] <- mean(rejectH0)
+  }
+}
+powermatrixs
+#rows:i--n, columns: k--df
+matplot(powermatrixs, type='l', xlab='df', ylab='P(type I)', col=1:5)
+abline(h = 0.05, col = "yellow")
+
+
+#Different Mean
+powermatrixd <- matrix(powervec,
+                       nrow=length(nvec),
+                       ncol=length(dfvec),byrow=TRUE)
+
+
+for(i in 1:length(nvec)){
+  n <- nvec[i]
+  for(k in 1:length(dfvec)){
+    df <- dfvec[k]
+    rejectH0 <- numeric(N)
+    for(j in 1:N){
+      x <- generate_data(n,"Chi-square",df)
+      y <- generate_data(n,"Chi-square",20)
+      out <- t.test(x,y)
+      pval <- out$p.value
+      if(pval < alpha){
+        rejectH0[j] <- 1
+      }
+    }
+    powermatrixd[i,k] <- mean(rejectH0)
+  }
+}
+powermatrixd
+#rows:i--n, columns: k--df
+matplot(powermatrixd, type='l', xlab='df', ylab='Power', col=1:5)
+#abline(h = 0.05, col = "yellow")
+
