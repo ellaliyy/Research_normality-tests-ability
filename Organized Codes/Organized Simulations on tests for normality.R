@@ -33,7 +33,7 @@ for(i in 1:length(dist_sum)){
           print(paste0(k, " sims complete for ", i, "th distribution, ",
                        z, "th test", " and ", j, "th sample size"))
         }
-        x <- generate_data(n,dist, 10, 2)
+        x <- generate_data(n,dist, 10, 2) #Here not fix yet--using same parameters here can not simulate similiar data from different distributions
         output <- generate_tests(x, test)
         pval <- output$p.value
         if(pval < alpha){
