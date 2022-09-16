@@ -1,9 +1,5 @@
-###Plots for downstream effects
 
-library("nortest")
-library("dgof")
-library("dplyr")
-library(moments)
+###Plots for downstream effects
 
 setwd("/Users/echo/Desktop")
 source("Organized User-defined functions.R")
@@ -26,7 +22,7 @@ for(i in 1:length(nvec)){
     for(j in 1:N){
       x <- generate_data(n,"Chi-square",df)
       y <- generate_data(n,"Chi-square",df)
-      out <- t.test(x,y)
+      out <- t.test(x/sqrt(2*df),y/sqrt(2*df))
       pval <- out$p.value
       if(pval < alpha){
         rejectH0[j] <- 1
@@ -63,9 +59,9 @@ for(i in 1:length(nvec)){
     df <- dfvec[k]
     rejectH0 <- numeric(N)
     for(j in 1:N){
-      x <- generate_data(n,"Chi-square",df)
-      y <- generate_data(n,"Chi-square",df)
-      out <- t.test(x,y+1)
+      x <- generate_data(n,"Chi-square", df)
+      y <- generate_data(n,"Chi-square", df)+1
+      out <- t.test(x/sqrt(2*df),y/sqrt(2*df))
       pval <- out$p.value
       if(pval < alpha){
         rejectH0[j] <- 1
@@ -83,7 +79,6 @@ matplot(powermatrixd,
         main = "Power-Normality Violated",
         col=1:5,
         lty = 1:5)
-abline(h = 0.05, col = "purple",pch = 3)
 legend("topleft",
        cex = 0.5,
        legend = c("df=3","df=5","df=8","df=10","df=15"),
@@ -103,8 +98,9 @@ for(i in 1:length(nvec)){
     df <- dfvec[k]
     rejectH0 <- numeric(N)
     for(j in 1:N){
-      x <- generate_data(n,"Normal",df, 5)
-      y <- generate_data(n,"Normal",df, 10)#different sd-not two exactly same distribution
+      x <- generate_data(n,"Normal",df)
+      y <- rnorm(n, mean = df, sd = (df+2))
+      #different sd-not two exactly same distribution
       out <- t.test(x,y)
       pval <- out$p.value
       if(pval < alpha){
@@ -131,3 +127,4 @@ legend("bottomleft",
        col = 1:5,
        lty = 1:5,
        title = "Mean")
+
