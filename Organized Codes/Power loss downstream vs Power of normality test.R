@@ -101,7 +101,7 @@ for(i in 1:length(smpn)){
   n <- smpn[i]
   rejectH0 <- numeric(N)
   for(j in 1:N){
-    x <- generate_data(n,"Chi-square", 5)
+    x <- generate_data(n,"Chi-square", 15)
     out <- shapiro.test(x)
     pval <- out$p.value
     if(pval < alpha){
