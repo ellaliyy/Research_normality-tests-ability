@@ -49,6 +49,7 @@ dif3
 plot(smpn, dif3,
      xlab='Power of normality test', 
      ylab='Power loss for downstream',
+     col = 'red',
      main = "Chi(3) vs Normal")
 
 ######Chi(5) vs Normal
@@ -90,7 +91,50 @@ dif5
 plot(smpn, dif5,
      xlab='Power of normality test', 
      ylab='Power loss for downstream',
+     col = 'red',
      main = "Chi(5) vs Normal")
+
+######Chi(15) vs Normal
+#Chi(15)
+powerchi15 <- numeric(length(smpn))
+for(i in 1:length(smpn)){
+  n <- smpn[i]
+  rejectH0 <- numeric(N)
+  for(j in 1:N){
+    x <- generate_data(n,"Chi-square", 5)
+    out <- shapiro.test(x)
+    pval <- out$p.value
+    if(pval < alpha){
+      rejectH0[j] <- 1
+    }
+  }
+  powerchi15[i] <- mean(rejectH0)
+}
+powerchi15
+#Normal(15,30)
+TypeIN15 <- numeric(length(smpn))
+for(i in 1:length(smpn)){
+  n <- smpn[i]
+  rejectH0 <- numeric(N)
+  for(j in 1:N){
+    y <- rnorm(n, mean = 15, sd = sqrt(30))
+    out <- shapiro.test(y)
+    pval <- out$p.value
+    if(pval < alpha){
+      rejectH0[j] <- 1
+    }
+  }
+  TypeIN15[i] <- mean(rejectH0)
+}
+TypeIN15
+#diff between Chi(15) and N(15)
+dif15 <- TypeIN15 - powerchi15
+dif15
+plot(smpn, dif15,
+     xlab='Power of normality test', 
+     ylab='Power loss for downstream',
+     col = 'red',
+     main = "Chi(15) vs Normal")
 
 
 
