@@ -1,15 +1,15 @@
-
 ###Plots for downstream effects
 
-setwd("/Users/echo/Desktop")
+setwd("/Users/ellali/Desktop")
 source("Organized User-defined functions.R")
 
-#Same Mean & Violated Normality
 alpha <- 0.05
 N <- 10000
 nvec <- c(5,10,15,20,25)
 dfvec <- c(3,5,8,10,15)
 powervec <- numeric(length(nvec)*length(dfvec))
+
+#Same Mean & Violated Normality
 powermatrixs <- matrix(powervec,
                        nrow=length(nvec),
                        ncol=length(dfvec),byrow=TRUE)
@@ -127,4 +127,48 @@ legend("bottomleft",
        col = 1:5,
        lty = 1:5,
        title = "Mean")
+
+
+
+#Different mean & Normality
+powermatrixND <- matrix(powervec,
+                       nrow=length(nvec),
+                       ncol=length(dfvec),byrow=TRUE)
+
+for(i in 1:length(nvec)){
+  n <- nvec[i]
+  for(k in 1:length(dfvec)){
+    df <- dfvec[k]
+    rejectH0 <- numeric(N)
+    for(j in 1:N){
+      x <- generate_data(n,"Normal",df)
+      y <- rnorm(n, mean = df+1, sd = df)
+      #different sd-not two exactly same distribution
+      out <- t.test(x/sqrt(df),y/sqrt(df))
+      pval <- out$p.value
+      if(pval < alpha){
+        rejectH0[j] <- 1
+      }
+    }
+    powermatrixND[i,k] <- mean(rejectH0)
+  }
+}
+powermatrixND
+#rows:i--n, columns: k--df
+matplot(powermatrixND, 
+        type='l', 
+        xlab='n', ylab='Power', 
+        xaxt = "n",
+        main = "Power-Normality Met",
+        col=1:5,
+        lty = 1:5)
+legend("topleft",
+       cex = 0.4,
+       legend = c("mean=3","mean=5","mean=8",
+                  "mean=10","mean=15"),
+       col = 1:5,
+       lty = 1:5,
+       title = "Mean")
+
+
 
