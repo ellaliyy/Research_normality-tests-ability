@@ -6,6 +6,43 @@ library(moments)
 
 #User-defined functions
 
+#Paper/Literature Review
+data_simulate <- function(n, dist){
+  if(dist == "Normal"){
+    x <- rnorm(n, mean = 100, sd = 4)
+  }
+  if(dist == "Standard Normal"){ 
+    x <- rnorm(n, mean = 0, sd = 1)
+  }
+  if(dist == "Gamma"){
+    x <- rgamma(n, shape = 2, rate = 1)
+  }
+  if(dist == "Expotential"){
+    x <- rexp(n, rate = 1)
+  }
+  if(dist == "t"){
+    x <- rt(n,df = 30)
+  }
+  if(dist == "Beta"){
+    x <- rbeta(n, shape1 = 2 , shape2 = 5)
+  }
+  if(dist == "Chi-square"){
+    x <- rchisq(n, 30)
+  }
+  if(dist == "Uniform"){
+    x <- runif(n, min = 40,max = 60)
+  }
+  return(x)
+}
+
+
+
+
+
+
+
+
+
 #Generate data from different distribution but located similarly
 generate_data <- function(n, dist, par1){
   if(dist == "Normal"){
